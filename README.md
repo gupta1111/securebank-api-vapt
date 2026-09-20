@@ -319,7 +319,12 @@ These controls provide additional browser-side security hardening.
 ---
 
 # 📁 Evidence Structure
+### 📸 Swagger UI
 
+![SecureBank API Swagger UI](evidence/swagger/01-swagger-ui.png)
+
+*Interactive Swagger/OpenAPI documentation for the SecureBank API.*
+ 
 Security-testing evidence is maintained in a structured directory:
 
 ```text
@@ -352,7 +357,7 @@ evidence/
     ├── 01-sqli-login-negative.txt
     └── 02-xss-negative.txt
 ```
-
+ 
 ---
 
 # 🚀 Live Deployment
