@@ -1,0 +1,14 @@
+Malformed Authorization Header Test
+====================================
+
+Endpoint:
+GET /api/accounts/my-account
+
+Test:
+Malformed Authorization header supplied.
+
+Expected:
+Request rejected.
+
+Assessment:
+Malformed authentication header was not accepted.

@@ -1,0 +1,14 @@
+Missing JWT Authentication Test
+===============================
+
+Endpoint:
+GET /api/accounts/my-account
+
+Test:
+Request sent without Authorization header.
+
+Expected:
+401 Unauthorized
+
+Assessment:
+The protected endpoint requires JWT authentication.

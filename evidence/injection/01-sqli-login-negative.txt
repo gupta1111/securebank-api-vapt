@@ -1,0 +1,18 @@
+VAPT Test: SQL Injection Authentication Bypass
+
+Endpoint:
+POST /api/auth/login
+
+Test:
+A SQL injection-style authentication bypass payload was supplied
+to the username parameter.
+
+Result:
+HTTP/1.1 401 UNAUTHORIZED
+
+Response:
+{"error":"invalid credentials"}
+
+Conclusion:
+The tested SQL injection payload did not bypass authentication.
+No SQL injection authentication bypass was demonstrated during this test.

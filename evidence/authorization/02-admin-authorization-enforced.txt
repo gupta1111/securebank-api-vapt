@@ -1,0 +1,18 @@
+VAPT Evidence: Admin Authorization Enforcement
+
+Endpoint:
+GET /api/accounts/admin-test
+
+Test:
+Authenticated non-admin user attempted to access an admin-only endpoint.
+
+Result:
+HTTP/1.1 403 FORBIDDEN
+
+Observation:
+The application rejected the authenticated user's request because
+the user does not have the required administrator role.
+
+Conclusion:
+Role-based authorization was successfully enforced for the tested
+admin-only endpoint.

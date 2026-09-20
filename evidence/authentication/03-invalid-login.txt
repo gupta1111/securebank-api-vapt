@@ -1,0 +1,16 @@
+VAPT Finding: Invalid Login Handling
+
+Endpoint:
+POST /api/auth/login
+
+Test:
+Valid username with an incorrect password.
+
+Observed Result:
+[INSERT ACTUAL STATUS CODE]
+
+Observed Response:
+[INSERT ACTUAL RESPONSE]
+
+Security Assessment:
+The application was tested for authentication failure handling.

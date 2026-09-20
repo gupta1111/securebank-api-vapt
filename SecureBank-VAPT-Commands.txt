@@ -1,0 +1,389 @@
+# ============================================================
+# SecureBank API - VAPT MASTER COMMAND GUIDE
+# ============================================================
+
+# 1. PROJECT SETUP
+# ============================================================
+
+mkdir -p ~/securebank-vapt
+cd ~/securebank-vapt
+
+python3 -m venv venv
+source venv/bin/activate
+
+mkdir -p app/{routes,models,utils}
+mkdir -p tests evidence screenshots reports docs
+
+pip install flask flask-sqlalchemy flask-jwt-extended flask-swagger-ui werkzeug
+
+pip freeze > requirements.txt
+
+git init
+
+
+# 2. RUN APPLICATION
+# ============================================================
+
+cd ~/securebank-vapt
+source venv/bin/activate
+
+python3 run.py
+
+
+# 3. CHECK ROUTES
+# ============================================================
+
+flask routes
+
+
+# 4. REGISTRATION TEST
+# ============================================================
+
+curl -i -X POST http://127.0.0.1:5000/api/auth/register \
+-H "Content-Type: application/json" \
+-d '{"username":"testuser","email":"testuser@example.com","password":"Test@12345"}'
+
+
+# 5. LOGIN / JWT TEST
+# ============================================================
+
+curl -i -X POST http://127.0.0.1:5000/api/auth/login \
+-H "Content-Type: application/json" \
+-d '{"username":"testuser","password":"Test@12345"}'
+
+# JWT ko terminal variable mein manually set karna:
+TOKEN="PASTE_JWT_HERE"
+
+
+# 6. CREATE BANK ACCOUNT
+# ============================================================
+
+curl -i -X POST http://127.0.0.1:5000/api/accounts/create \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN"
+
+
+# 7. MY ACCOUNT
+# ============================================================
+
+curl -i http://127.0.0.1:5000/api/accounts/my-account \
+-H "Authorization: Bearer $TOKEN"
+
+
+# 8. BOLA / IDOR TEST
+# ============================================================
+
+# Kisi doosre user ke account ID ko test karo.
+# Example:
+
+curl -i http://127.0.0.1:5000/api/accounts/4 \
+-H "Authorization: Bearer $TOKEN"
+
+
+# 9. FUNCTION LEVEL AUTHORIZATION
+# ============================================================
+
+curl -i http://127.0.0.1:5000/api/accounts/admin-test \
+-H "Authorization: Bearer $TOKEN"
+
+
+# 10. MISSING JWT TEST
+# ============================================================
+
+curl -i http://127.0.0.1:5000/api/accounts/my-account
+
+
+# 11. INVALID JWT TEST
+# ============================================================
+
+curl -i http://127.0.0.1:5000/api/accounts/my-account \
+-H "Authorization: Bearer fake.invalid.token"
+
+
+# 12. MALFORMED AUTH HEADER TEST
+# ============================================================
+
+curl -i http://127.0.0.1:5000/api/accounts/my-account \
+-H "Authorization: InvalidToken"
+
+
+# 13. SQL INJECTION TEST
+# ============================================================
+
+curl -i -X POST http://127.0.0.1:5000/api/auth/login \
+-H "Content-Type: application/json" \
+-d '{"username":"'\'' OR 1=1 --","password":"test"}'
+
+
+# Expected:
+# 401 Unauthorized
+# invalid credentials
+#
+# This indicates authentication bypass was NOT demonstrated.
+
+
+# 14. XSS TEST
+# ============================================================
+
+curl -i -X POST http://127.0.0.1:5000/api/auth/register \
+-H "Content-Type: application/json" \
+-d '{"username":"xsstest2026","email":"xsstest2026@example.com","password":"Test@12345<script>alert(1)</script>"}'
+
+
+# Login with same test password:
+
+curl -i -X POST http://127.0.0.1:5000/api/auth/login \
+-H "Content-Type: application/json" \
+-d '{"username":"xsstest2026","password":"Test@12345<script>alert(1)</script>"}'
+
+
+# Set returned JWT locally:
+TOKEN_XSS="PASTE_JWT_HERE"
+
+
+# Check authenticated endpoint:
+
+curl -i http://127.0.0.1:5000/api/accounts/my-account \
+-H "Authorization: Bearer $TOKEN_XSS"
+
+
+# 15. SECURITY HEADERS
+# ============================================================
+
+curl -I http://127.0.0.1:5000/docs/
+
+
+# Check:
+# X-Content-Type-Options
+# X-Frame-Options
+# Content-Security-Policy
+
+
+# 16. SWAGGER UI
+# ============================================================
+
+# Browser:
+# http://127.0.0.1:5000/docs/
+
+# Swagger JSON:
+
+curl -i http://127.0.0.1:5000/docs/swagger.json
+
+
+# 17. EVIDENCE DIRECTORIES
+# ============================================================
+
+mkdir -p evidence/{authentication,authorization,accounts,injection,security-headers,swagger}
+mkdir -p reports
+
+find evidence -type f | sort
+find reports -type f | sort
+
+
+# 18. SAVE EXISTING EVIDENCE
+# ============================================================
+
+# Authentication:
+# evidence/authentication/
+#   01-registration-success.txt
+#   02-login-success.txt
+#   03-missing-jwt.txt
+#   04-invalid-jwt.txt
+#   05-malformed-auth-header.txt
+
+# Authorization:
+# evidence/authorization/
+#   01-my-account-isolation.txt
+#   02-admin-authorization-enforced.txt
+#   03-bola-negative.txt
+
+# Accounts:
+# evidence/accounts/
+#   01-account-creation-success.txt
+#   02-my-account-success.txt
+
+# Security headers:
+# evidence/security-headers/
+#   01-security-headers.txt
+
+# Swagger:
+# evidence/swagger/
+#   01-swagger-ui.png
+#   02-swagger-json-exposure.txt
+
+# Injection:
+# evidence/injection/
+#   01-sqli-login-negative.txt
+#   02-xss-negative.txt
+
+
+# 19. CHECK COMPLETE PROJECT
+# ============================================================
+
+find . -maxdepth 3 -type f | sort
+
+
+# 20. GIT STATUS
+# ============================================================
+
+cd ~/securebank-vapt
+
+git status
+
+
+# 21. ADD FILES
+# ============================================================
+
+git add .
+
+
+# 22. CHECK WHAT WILL BE COMMITTED
+# ============================================================
+
+git status
+
+
+# 23. COMMIT FINAL PROJECT
+# ============================================================
+
+git commit -m "Complete SecureBank VAPT assessment and documentation"
+
+
+# 24. SET MAIN BRANCH
+# ============================================================
+
+git branch -M main
+
+
+# 25. GITHUB REMOTE
+# ============================================================
+
+git remote set-url origin git@github.com:gupta1111/securebank-api-vapt.git
+
+git remote -v
+
+
+# 26. TEST GITHUB SSH
+# ============================================================
+
+ssh -T git@github.com
+
+
+# 27. PUSH TO GITHUB
+# ============================================================
+
+git push origin main
+
+
+# 28. FINAL GIT CHECK
+# ============================================================
+
+git status
+
+
+# ============================================================
+# FINAL PROJECT STRUCTURE
+# ============================================================
+
+# securebank-vapt/
+#
+# ├── app/
+# │   ├── routes/
+# │   ├── models/
+# │   └── utils/
+# │
+# ├── evidence/
+# │   ├── authentication/
+# │   ├── authorization/
+# │   ├── accounts/
+# │   ├── injection/
+# │   ├── security-headers/
+# │   └── swagger/
+# │
+# ├── reports/
+# ├── screenshots/
+# ├── docs/
+# ├── tests/
+# ├── requirements.txt
+# ├── run.py
+# └── README.md
+
+
+# ============================================================
+# OWASP API SECURITY TOP 10 - 2023
+# ============================================================
+
+# API1  - Broken Object Level Authorization
+# API2  - Broken Authentication
+# API3  - Broken Object Property Level Authorization
+# API4  - Unrestricted Resource Consumption
+# API5  - Broken Function Level Authorization
+# API6  - Unrestricted Access to Sensitive Business Flows
+# API7  - Server Side Request Forgery
+# API8  - Security Misconfiguration
+# API9  - Improper Inventory Management
+# API10 - Unsafe Consumption of APIs
+
+
+# ============================================================
+# FINAL VAPT CHECKLIST
+# ============================================================
+
+# [ ] Registration tested
+# [ ] Login tested
+# [ ] JWT authentication tested
+# [ ] Missing JWT tested
+# [ ] Invalid JWT tested
+# [ ] Malformed JWT header tested
+# [ ] Account creation tested
+# [ ] User account isolation tested
+# [ ] BOLA/IDOR tested
+# [ ] Admin authorization tested
+# [ ] SQL Injection tested
+# [ ] XSS tested
+# [ ] Security headers tested
+# [ ] Swagger UI checked
+# [ ] Swagger JSON checked
+# [ ] Evidence collected
+# [ ] OWASP mapping completed
+# [ ] VAPT report completed
+# [ ] README completed
+# [ ] Git commit completed
+# [ ] GitHub push completed
+
+
+# ============================================================
+# RESUME PROJECT TITLE
+# ============================================================
+
+# SecureBank API – VAPT & Web API Security Assessment
+
+
+# ============================================================
+# RESUME BULLETS
+# ============================================================
+
+# - Developed a Flask-based REST API with JWT authentication,
+#   password hashing, role-based authorization and object-level
+#   access control.
+#
+# - Performed VAPT covering BOLA/IDOR, authentication,
+#   authorization, SQL injection, XSS, JWT validation,
+#   security headers and API exposure.
+#
+# - Mapped security testing against the OWASP API Security
+#   Top 10 2023 and maintained evidence-based test documentation.
+#
+# - Implemented security hardening including debug-mode
+#   disablement, authorization checks and HTTP security headers.
+#
+# - Created a professional VAPT report, OWASP mapping and
+#   reproducible security-testing evidence.
+
+
+# ============================================================
+# IMPORTANT
+# ============================================================
+
+# Real passwords, JWT tokens, API keys or private keys
+# GitHub par kabhi commit/push mat karna.

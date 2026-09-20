@@ -1,0 +1,39 @@
+VAPT Observation: Swagger/OpenAPI Specification Exposure
+
+Endpoint:
+GET /docs/swagger.json
+
+Result:
+HTTP/1.1 200 OK
+
+Content-Type:
+application/json
+
+Observed Information:
+- API title and version
+- Available API endpoints
+- Request/response schemas
+- Authentication mechanism
+- JWT Bearer security scheme
+- Example request values
+- Authorization-related endpoint descriptions
+
+Security Headers:
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Security-Policy: present
+
+Assessment:
+The OpenAPI specification is accessible without authentication.
+
+Risk:
+This may disclose API structure and implementation details to
+unauthenticated users. The actual risk depends on whether public
+API documentation is intended for this deployment.
+
+Classification:
+Security hardening / information disclosure observation.
+
+Note:
+No authentication bypass was demonstrated from Swagger specification
+exposure alone.

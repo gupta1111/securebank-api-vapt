@@ -1,0 +1,14 @@
+Invalid JWT Authentication Test
+===============================
+
+Endpoint:
+GET /api/accounts/my-account
+
+Test:
+Request sent with an invalid JWT.
+
+Expected:
+Request rejected with 401/422.
+
+Assessment:
+Invalid authentication token was not accepted.

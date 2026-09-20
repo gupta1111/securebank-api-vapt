@@ -1,0 +1,13 @@
+BOLA / IDOR Negative Test
+==========================
+
+Scenario:
+User B attempted to access User A's account using the account ID.
+
+Result:
+HTTP 404 NOT FOUND
+{"error":"account not found"}
+
+Assessment:
+Cross-user object access was not demonstrated.
+Object-level authorization is enforced.
