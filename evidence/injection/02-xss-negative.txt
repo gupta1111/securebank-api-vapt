@@ -1,0 +1,24 @@
+XSS Negative Test
+==================
+
+Endpoint:
+POST /api/auth/register
+POST /api/auth/login
+GET /api/accounts/my-account
+
+Payload:
+<script>alert(1)</script>
+
+Result:
+Login returned HTTP 200.
+Authenticated account lookup returned HTTP 404 with:
+{"error":"account not found"}
+
+Assessment:
+The supplied XSS payload was not demonstrated to be reflected or executed.
+No XSS vulnerability was confirmed during this test.
+
+Security headers observed:
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Security-Policy: default-src 'self'
