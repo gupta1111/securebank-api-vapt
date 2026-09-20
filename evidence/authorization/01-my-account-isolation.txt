@@ -1,0 +1,19 @@
+VAPT Evidence: User Account Isolation
+
+Endpoint:
+GET /api/accounts/my-account
+
+Test:
+User A accessed the endpoint using User A's JWT.
+Result: HTTP 200 OK
+
+User B accessed the endpoint using User B's JWT.
+Result: HTTP 200 OK
+
+Observation:
+The endpoint returns the authenticated user's account information.
+The test did not demonstrate cross-user account access.
+
+Conclusion:
+No authorization bypass was demonstrated through the my-account endpoint
+during this test.

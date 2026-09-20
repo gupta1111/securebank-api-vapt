@@ -1,0 +1,18 @@
+VAPT Evidence: Successful User Registration
+
+Endpoint:
+POST /api/auth/register
+
+Result:
+HTTP/1.1 201 CREATED
+
+Response:
+{"message":"user registered successfully","user_id":5}
+
+Security Headers:
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Content-Security-Policy: default-src 'self'
+
+Conclusion:
+The registration endpoint successfully creates a new user with valid input.

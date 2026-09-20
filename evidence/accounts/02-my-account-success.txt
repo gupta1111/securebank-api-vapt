@@ -1,0 +1,13 @@
+VAPT Evidence: Authenticated User Account Access
+
+Endpoint:
+GET /api/accounts/my-account
+
+Authentication:
+JWT Bearer token required
+
+Result:
+HTTP/1.1 200 OK
+
+Conclusion:
+An authenticated user successfully accessed their own bank account information.

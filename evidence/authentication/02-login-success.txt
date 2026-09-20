@@ -1,0 +1,19 @@
+VAPT Evidence: Successful User Login
+
+Endpoint:
+POST /api/auth/login
+
+Test Account:
+evidenceuser1
+
+Result:
+HTTP/1.1 200 OK
+
+Authentication:
+Successful
+
+JWT:
+Issued successfully
+
+Note:
+JWT token intentionally excluded from evidence file for security.

@@ -1,0 +1,30 @@
+VAPT Evidence: Security Response Headers
+
+Endpoint:
+GET /docs/
+
+Result:
+HTTP/1.1 200 OK
+
+Observed Headers:
+
+X-Content-Type-Options:
+nosniff
+
+X-Frame-Options:
+DENY
+
+Content-Security-Policy:
+default-src 'self';
+script-src 'self' 'unsafe-inline';
+style-src 'self' 'unsafe-inline';
+img-src 'self' data:;
+font-src 'self' data:
+
+Observation:
+Security-related HTTP response headers are present.
+
+Note:
+The Content-Security-Policy permits inline scripts and styles through
+'unsafe-inline'. This configuration will be assessed during the
+VAPT analysis and OWASP mapping phase.
